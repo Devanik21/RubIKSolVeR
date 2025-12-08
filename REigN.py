@@ -10,7 +10,7 @@ from collections import deque
 # 1. SYSTEM CONFIGURATION & STYLING
 # ==========================================
 st.set_page_config(
-    page_title="AIM - Rubik's Cube Solver System",
+    page_title="Rubik's Cube Solver System",
     layout="wide",
     initial_sidebar_state="expanded",
     page_icon="🧊"
@@ -400,7 +400,7 @@ with st.sidebar:
         log(f"Training Complete. Total Episodes: {st.session_state.agent.training_stats['episodes']}")
 
 # --- Main Page ---
-st.title("AIM - RUBIK'S CUBE SOLVER SYSTEM")
+st.title("RUBIK'S CUBE SOLVER SYSTEM")
 st.markdown("### Autonomous Intelligent Model / Analytical Engine")
 
 # Tabs
