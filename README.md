@@ -226,7 +226,7 @@ AIM-Rubiks-Solver/
 
 ## 🤝 Contact & License
 
-**Developer:** Nik (Prince)
+**Developer:** Nik 
 **Role:** Final Year B.Tech (ECE)
 **Institution:** NIT Agartala
 
