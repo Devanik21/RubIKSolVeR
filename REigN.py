@@ -367,6 +367,10 @@ if 'agent' not in st.session_state:
     st.session_state.agent = RubiksCubeAI(cube_size=2)
 if 'logs' not in st.session_state:
     st.session_state.logs = []
+if 'last_scramble' not in st.session_state:
+    st.session_state.last_scramble = []
+if 'last_solution' not in st.session_state:
+    st.session_state.last_solution = []
 
 def log(msg):
     ts = time.strftime("%H:%M:%S")
@@ -453,10 +457,10 @@ with tab_analytical:
         st.markdown("#### OPERATIONS")
         
         if st.button("INITIALIZE SCRAMBLE"):
-            moves = st.session_state.solver.shuffle(num_moves=20 + st.session_state.solver.n * 2)
-            log(f"Scramble Sequence Applied: {len(moves)} moves")
-            # Only show first 10 moves to avoid clutter
-            log(f"Head: {' '.join(moves[:10])} ...")
+            scramble_moves = st.session_state.solver.shuffle(num_moves=20 + st.session_state.solver.n * 2)
+            st.session_state.last_scramble = scramble_moves
+            st.session_state.last_solution = [] # Clear previous solution
+            log(f"Scramble Sequence Applied: {len(scramble_moves)} moves")
             st.rerun()
             
         if st.button("EXECUTE SOLUTION"):
@@ -465,17 +469,32 @@ with tab_analytical:
             else:
                 start_t = time.time()
                 solution = st.session_state.solver.solve()
+                st.session_state.last_solution = solution
                 delta_t = time.time() - start_t
                 
                 # Apply solution visually
                 for m in solution:
                     st.session_state.solver.move(m)
                 
-                log(f"Solution Executed: {len(solution)} moves in {delta_t:.4f}s")
+                log(f"Solution Found: {len(solution)} moves in {delta_t:.4f}s")
                 if len(solution) > 0:
                      efficiency = (1 - (len(solution) / len(st.session_state.solver.scramble_moves))) * 100 if st.session_state.solver.scramble_moves else 0
                      log(f"Optimization Efficiency: {efficiency:.1f}%")
                 st.rerun()
+
+    st.divider()
+
+    # Move Sequence Display
+    col_scramble, col_solution = st.columns(2)
+    with col_scramble:
+        st.markdown("#### Scramble Sequence")
+        st.metric("Moves", len(st.session_state.last_scramble))
+        st.code(' '.join(st.session_state.last_scramble), language=None)
+    
+    with col_solution:
+        st.markdown("#### Solution Sequence")
+        st.metric("Moves", len(st.session_state.last_solution))
+        st.code(' '.join(st.session_state.last_solution), language=None)
 
     # System Logs
     st.markdown("#### SYSTEM LOG")
